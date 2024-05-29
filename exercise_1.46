@@ -1,0 +1,14 @@
+(import (chibi))
+(define (iterative-improve good-enough? improve)
+  (lambda (x)
+    (let (guess ))
+    (if (good-enough? x ) x ((iterative-improve good-enough? improve) (improve x)) )
+  ) 
+)
+
+(define (sqrt x)
+  (define (good-enough guess)
+    (< (abs (- (square guess) x)) 0.001)
+  )
+
+)

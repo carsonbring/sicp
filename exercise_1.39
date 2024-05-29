@@ -1,0 +1,21 @@
+(import (chibi))
+(define (cont-frac n d k counter)
+  (if (= counter k) 0 (/ (n counter) (+ (d counter) (cont-frac n d k (+ counter 1) ))))
+)
+
+(define (power x y)
+  (if (= y 0)
+      1
+      (* x (power x (- y 1)))))
+
+(define (tan-cf x k)
+  (define (exponent i)
+    (if (= i 1)
+        x
+        (* (- (* x x)))))  
+  (define (odd-num i) (- (* 2 i) 1))
+  (cont-frac exponent odd-num k 1)
+)
+
+; Approximation to the tangent function (JH Lambert)
+(display (tan-cf 2.359425 10000))

@@ -1,0 +1,15 @@
+(import (chibi))
+(define (cont-frac n d k counter)
+  (if (= counter k) 0 (/ (n counter) (+ (d counter) (cont-frac n d k (+ counter 1) ))))
+)
+
+; using Euler's expansion to approximate e -2
+(define (f x)
+  (if (= (modulo x 3) 2) 
+    (* 2 (+ 1 (/ (- x 2) 3)))
+    1
+  )
+)
+(newline)
+(display (cont-frac (lambda (i) 1.0) f 1000 1))
+

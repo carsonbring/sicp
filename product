@@ -1,0 +1,33 @@
+; Exercise 1.31
+(import (chibi))
+(define (product term a next b )
+  (if (> a b) 1  (* (term a) (product term (next a) next b))) 
+)
+(define (product-iter term a next b)
+  (define(iter a result)
+    (if (> a b) result (iter (next a ) (* result (term a))))
+  )
+  (iter a 1)
+)
+(define (factorial n)
+  
+  (define (fact-iter a) (+ a 1))
+  (define (fact-term a)  a)
+  (product fact-term 1 fact-iter n)
+)
+; approx pi/2
+(define (wallis-product n)
+  (define (iter a) (+ a 1))
+  (define (term n)
+    (* (/ (* 2 n)
+          (- (* 2 n) 1))
+       (/ (* 2 n)
+          (+ (* 2 n) 1))))
+  (product-iter term 1.0 iter n))
+
+
+; (display(product  fact-term 1 fact-iter 3))
+(display (wallis-product 1000))
+(display "\n")
+(display (factorial 5))
+

@@ -1,0 +1,16 @@
+(import (chibi))
+(define (cont-frac-iter n d k)
+  (define (frac-helper a result)
+    (if (= a k) result
+      (frac-helper (+ a 1) (/ (n a) (+ (d a) result)))
+    )
+  )
+  (frac-helper 1 0)
+)
+(define (cont-frac n d k counter)
+  (if (= counter k) 0 (/ (n counter) (+ (d counter) (cont-frac n d k (+ counter 1) ))))
+)
+; approximating 1/golden ratio
+(display (cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 10000 1))
+
+

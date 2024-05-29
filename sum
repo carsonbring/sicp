@@ -7,6 +7,13 @@
   )
  )
 
+(define (sum-iter term a next b)
+  (define (iter a result)
+    (if (> a b) result (iter (next a) (+ result (term a))))
+
+  )
+  (iter a 0)
+)  
 (define (integral f a b dx)
   (define (add-dx x) (+ x dx))
   (* dx (sum f (+ a (/ dx 2.0)) add-dx b))
@@ -28,9 +35,8 @@
   (define (simp-term k)
    (* (coefficient k ) (f (+ a (* k h) )))
    )
-  (* (/ h 3) (sum simp-term 0 (lambda (k) (+ k 1)) n))
+  (* (/ h 3) (sum-iter simp-term 0 (lambda (k) (+ k 1)) n))
 )
-  
 (define (cube x)
  (* x x x)
 )

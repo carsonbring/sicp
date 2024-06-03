@@ -1,0 +1,13 @@
+(import (chibi))
+
+; Church numerals
+(define zero (lambda (f) (lambda (x) x)))
+(define (add-1 n) (lambda (f) (lambda (x) (f ((n f) x)))))
+(define one (lambda (f) (lambda (x) (f x))))
+(define two (lambda (f) (lambda (x)  (f (f x)))))
+(define (add  m n)
+  (lambda (f) (lambda (x) ((m f) ((n f) x)))))
+(define (add1 x)
+  (+ x 1) 
+)
+(display (((add one two) add1) 0)) (newline)

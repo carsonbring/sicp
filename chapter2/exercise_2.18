@@ -1,0 +1,11 @@
+(import (chibi))
+(define (reverse list)
+  (if (null? (cdr list))
+    list
+    (append (reverse (cdr list)) (cons (car list) '() ))
+  )
+)
+
+(display (reverse (list 1 2 3 4 5 6)))
+
+

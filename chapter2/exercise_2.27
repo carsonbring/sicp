@@ -1,0 +1,19 @@
+(import (chibi))
+(define (reverse list)
+  (if (null? (cdr list))
+    list
+    (append (reverse (cdr list)) (cons (car list) '() ))
+  )
+)
+
+(define (deep-reverse list)
+  (if (null? list)
+    list
+    (append (deep-reverse (cdr list)) (cons ((lambda (x) (if (pair? x) (deep-reverse x) x)) (car list)) '() ))
+  )
+)
+
+(display (deep-reverse (list (list 1 2) (list 3 4))))
+
+
+

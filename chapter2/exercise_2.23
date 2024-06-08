@@ -1,0 +1,5 @@
+(import (chibi))
+(define (for-each proc l) 
+    (if (null? l) #t 
+     ((lambda (x) (proc (car x)) (for-each proc (cdr x))) l)))
+(for-each (lambda (x) (newline) (display x)) (list 1 2 3 4 5 6 7))

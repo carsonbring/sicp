@@ -1,0 +1,7 @@
+(import (chibi))
+(define (square-tree tree )
+  (define (square x) (* x x))
+  (map (lambda (sub-tree) 
+      (if (pair? sub-tree) (square-tree sub-tree) (square sub-tree))
+  ) tree))
+(display (square-tree (list (list 2 4) 8 9 (list 2 3 4))))

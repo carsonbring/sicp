@@ -1,0 +1,31 @@
+; 06/15/24
+(import (chibi))
+(define (fold-left op initial sequence)
+  (define (iter result rest)
+    (if (null? rest)
+      result
+      (iter (op result (car rest)) (cdr rest))
+     )
+   )
+  (iter initial sequence)
+ )
+
+(define (fold-right op initial sequence)
+  (if (null? sequence) initial  (op (car sequence) (fold-right op initial (cdr sequence))))
+ )
+
+(define (right-reverse seq)
+ (fold-right (lambda (x y) (append y (list x))) '() seq ) 
+)
+
+(define (left-reverse seq)
+  (fold-left (lambda (x y) (append y (list x))) '() seq)
+)
+(newline)
+(display "right reverse")
+(newline)
+(display (right-reverse (list 1 2 3)))
+(newline)
+(display "left reverse")
+(newline)
+(display (left-reverse (list 1 2 3)))

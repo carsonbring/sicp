@@ -1,4 +1,5 @@
-
+#lang sicp
+(#%require sicp-pict)
 (define (right-split painter n) 
   (if (= n 0)
     painter
@@ -28,4 +29,4 @@
     )
   )
 )
-(corner-split wave 4)
+(paint (corner-split einstein 4))

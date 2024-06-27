@@ -10,17 +10,21 @@
 
 (define (=number? exp num)
   (and (number? exp) (= exp num)))
-
+(define (make-sum-list l)
+  (if (= (length l) 2) (list '+ (car l) (cadr l)) (make-sum (car l) (make-sum-list (cdr l)))))
 (define (make-sum a1 a2)
-  (cond ((=number? a1 0) a2)
+ (cond ((=number? a1 0) a2)
         ((=number? a2 0) a1)
         ((and (number? a1) (number? a2)) (+ a1 a2))
-        (else (list '+ a1 a2))))
+        (else (make-sum-list (list a1 a2)))))
 
 (define (sum? x)
   (and (pair? x) (eq? (car x) '+)))
 (define (addend s) (cadr s))
-(define (augend s) (caddr s))
+(define (augend s)
+  (let ((m (cddr s)))
+    (if (= (length m) 1) (car m) (make-sum-list m)))
+  )
 
 
 (define (make-product m1 m2)
@@ -28,12 +32,18 @@
         ((=number? m1 1) m2)
         ((=number? m2 1) m1)
         ((and (number? m1) (number? m2)) (* m1 m2))
-        (else (list '* m1 m2))))
-
+        (else (make-product-list (list m1 m2)))))
+(define (make-product-list l)
+  (if (= (length l) 2) (list '* (car l) (cadr l)) (make-product (car l) (make-product-list (cdr l)))))
 (define (product? x)
   (and (pair? x) (eq? (car x) '*)))
 (define (multiplier p) (cadr p))
-(define (multiplicand p) (caddr p))
+(define (multiplicand p)
+  (let ((a (cddr p)))
+    (if (= (length a) 1)
+	(car a)
+	(make-product-list a)))
+  )
 (define (power b e)
   (if (= e 0) 1 (* b (power b (- e 1)))))
 
@@ -66,4 +76,4 @@
         (else
          (error "unknown expression type -- DERIV" exp))))
 
-(display (deriv '(* 2 (** x 2)) 'x))
+(display (deriv '(* x y (+ x 3)) 'x))

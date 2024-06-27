@@ -1,4 +1,4 @@
-(import (chibi))
+#lang sicp
 (define (accumulate op init seq)
   (if (null? seq) init (op (car seq) (accumulate op init (cdr seq))))
 )
@@ -58,5 +58,5 @@
   (queen-cols board-size)
 )
 
-(display (queens 10))
+(display (queens 8))
 

@@ -1,24 +1,5 @@
-; 2024-07-08
+; 2024-07-09
 #lang sicp
-;; (define (deriv exp var)
-;;   (cond ((number? exp) 0)
-;;         ((variable? exp) (if (same-variable? exp var) 1 0))
-;;         ((sum? exp)
-;;          (make-sum (deriv (addend exp) var)
-;;                    (deriv (augend exp) var)))
-;;         ((product? exp)
-;;          (make-sum
-;;            (make-product (multiplier exp)
-;;                          (deriv (multiplicand exp) var))
-;;            (make-product (deriv (multiplier exp) var)
-;;                          (multiplicand exp))))
-;;         <more rules can be added here>
-;;         (else (error "unknown expression type -- DERIV" exp))))
-;; -----------------------------------------------------------------
-;; Above is the previous implementation of deriv from exercise 2.56
-;; Our new deriv below uses a data-directed dispatch approach to "get" the correct deriv function as per the operator
-;; After the new derivative function is retreived, the function is applied by using the operands and var as arguments
-;; We cannot assimildate the predicates (number?) and (same-variable?) due to them being special cases where no matter the operation we add for deriv, they apply when taking the derivative of the expression argument.
 
 (define (make-table)
   (let ((local-table (list '*table*)))
@@ -54,63 +35,27 @@
 (define get (operation-table 'lookup-proc))
 (define put (operation-table 'insert-proc!))
 
+; a. Implement for headquarters a get-record procedure that retrieves a specified employee's record from a specified personnel file. The procedure should be applicable to any division's file. Explain how the individual divisions' files should be structured. In particular, what type information must be supplied?
 
-(define (operator exp) (car exp))
-(define (operands exp) (cdr exp))
+(define (get-record employee-name personnel-file)
+  ((get 'get-record personnel-file) employee-name))
 
-(define (install-deriv-package)
-  (define (=number? exp num)
-  (and (number? exp) (= exp num)))
-  (define (make-sum a1 a2)
-    (cond ((=number? a1 0) a2)
-          ((=number? a2 0) a1)
-          ((and (number? a1) (number? a2)) (+ a1 a2))
-          (else (list '+ a1 a2))))
-  (define (addend s) (car s))
-  (define (augend s) (cadr s))
-  
-  (define (make-product m1 m2) (list '* m1 m2))
-  (define (multiplier p) (car p))
-  (define (multiplicand p) (cadr p))
-  (define (power b e)
-    (if (= e 0) 1 (* b (power b (- e 1)))))
-
-  
-  (define (make-exponentiation b e)
-    (cond ((= e 0) 1)
-          ((= e 1) b) 
-          ((= b 0) 0)
-          ((and (number? b) (number? e)) (power b e))
-          (else (list '** b e))))
-
-  (define (base e) (car e))
-  (define (exponent e) (cadr e))
- 
-  (define (sum-deriv exp var)
-    (make-sum (deriv (addend exp) var) (deriv (augend exp) var)))
-
-  (define (mul-deriv exp var)
-    (make-sum (make-product (multiplier exp)
-                         (deriv (multiplicand exp) var))
-           (make-product (deriv (multiplier exp) var)
-                         (multiplicand exp))))
-  (define (exp-deriv exp var)
-    (make-product (make-product (make-exponentiation (base exp) (- (exponent exp) 1)) (exponent exp)) (deriv (base exp) var)))
-  (put 'deriv '** exp-deriv )
-  (put 'deriv '* mul-deriv)
-  (put 'deriv '+ sum-deriv)
-  'done)
-
-(install-deriv-package)
+;Each of the files should have their own version of get-record selector implemented It should select on the employee name to fine the record in the file
 
 
-(define (deriv exp var)
-  (cond ((number? exp) 0)
-        ((variable? exp) (if (same-variable? exp var) 1 0))
-        (else ((get 'deriv (operator exp)) (operands exp)
-                                           var))))
+;b.  Implement for headquarters a get-salary procedure that returns the salary information from a given employee's record from any division's personnel file. How should the record be structured in order to make this operation work?
+(define (get-salary employee-name personnel-file)
+  ((get 'get-salary personnel-file) employee-name))
+; This procedure works the same as the previous but instead of retrieving the whole record, each divison would have to implement a selector for salary which would be able to retreive the salary from a record.
 
-(define (variable? x) (symbol? x))
-(define (same-variable? v1 v2)
-  (and (variable? v1) (variable? v2) (eq? v1 v2)))
-(display (deriv '(* 2 (** x 2)) 'x))
+;c.  Implement for headquarters a find-employee-record procedure. This should search all the divisions' files for the record of a given employee and return the record. Assume that this procedure takes as arguments an employee's name and a list of all the divisions' files.
+
+(define (find-employee-record name div-file-list)
+  (let ((employee ((get 'get-record (car div-file-list)) name)))
+      (cond ((not (null? employee)) employee )
+            ((null? div-file-list) (error "Employee not found"))
+            (else (find-employee-record name (cdr div-file-list))))))
+
+; d When Insatiable takes over a new company, what changes must be made in order to incorporate the new personnel information into the central system?
+
+; All they have to do is create their own division package that implements each of the already existing generic procedures so that they are able to access their division file seamlessly. 

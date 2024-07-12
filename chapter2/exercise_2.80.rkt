@@ -12,5 +12,5 @@
   (define (equ? num1 num2) (=zero? (sub num1 num2)))
   (put 'equ? 'generic equ?) 'done)
 
-(define (=zero? num1 num2)
-  ((get 'type)))
+(define (=zero? num)
+  ((get '=zero? (type-tag num) ) num))

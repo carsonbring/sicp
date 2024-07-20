@@ -1,6 +1,9 @@
 ;2024-07-18
-; In order to implement this i have to have a list of sequential elements, each of the elements has a value and a pointer to the previous element in the list.
-; Going to do this tomorrow. 
+;I DID IT!!! I'm pretty happy with this one (even though the print-dequeue is a little gross looking)
+; I learned so much about pointers from this one exercise and it was just the right amount of challenging.
+; Exercises like this remind me of how much I love this book.
+
+;Dequeue implementation
 #lang sicp
 
 (define (front-ptr queue) (car queue))
@@ -11,49 +14,63 @@
 (define (empty-dequeue? queue) (null? (front-ptr queue)))
 
 (define (make-dequeue) (cons '() '()))
-(define (print-queue queue)
-  (car queue))
+(define (print-dequeue dequeue)
+  (display (car dequeue))
+  (newline))
 
-(define (front-queue queue)
-  (if (empty-dequeue? queue)
-      (error "FRONT called with an empty queue" queue)
-      (car (front-ptr queue))))
+(define (front-dequeue dequeue)
+  (if (empty-dequeue? dequeue)
+      (error "FRONT called with an empty queue" dequeue)
+      (car  (car (front-ptr dequeue)))))
 
-(define (rear-insert-queue! queue item)
-  (let ((new-pair (cons item '())))
-    (cond ((empty-dequeue? queue)
-           (set-front-ptr! queue new-pair)
-           (set-rear-ptr! queue new-pair)
-           (print-queue queue))
+(define (rear-insert-dequeue! dequeue item)
+  (let ((new-pair  (cons (cons item (rear-ptr dequeue)) '())))
+    (cond ((empty-dequeue? dequeue)
+           (set-front-ptr! dequeue new-pair)
+           (set-rear-ptr! dequeue new-pair)
+           (print-dequeue dequeue))
           (else
-           (set-cdr! (rear-ptr queue) new-pair)
-           (set-rear-ptr! queue new-pair)
-           (print-queue queue)))))
+           (set-cdr! (rear-ptr dequeue) new-pair)
+           (set-rear-ptr! dequeue new-pair)
+           (print-dequeue dequeue)))))
 
-(define (front-delete-queue! queue)
-  (cond ((empty-dequeue? queue)
-         (error "DELETE! called with an empty queue" queue))
+(define (front-insert-dequeue! dequeue item)
+  (let ((new-pair (cons (cons item '()) (front-ptr dequeue))))
+    (cond ((empty-dequeue? dequeue)
+           (set-front-ptr! dequeue new-pair)
+           (set-rear-ptr! dequeue new-pair)
+           (print-dequeue dequeue))
+          (else
+           (set-cdr!  (car (front-ptr dequeue)) new-pair)
+           (set-front-ptr!  dequeue new-pair)
+           (print-dequeue dequeue)))))
+
+
+(define (front-delete-dequeue! dequeue)
+  (cond ((empty-dequeue? dequeue)
+         (error "DELETE! called with an empty queue" dequeue))
         (else
-         (set-front-ptr! queue (cdr (front-ptr queue)))
-         (print-queue queue))))
+         (set-front-ptr! dequeue (cdr (front-ptr dequeue)))
+         (set-cdr! (car (front-ptr dequeue)) '())
+         (print-dequeue dequeue))))
 
-(define (rear-delete-queue! queue)
-  (cond ((empty-dequeue? queue)
-         (error "DELETE! called with an empty queue" queue))
+(define (rear-delete-dequeue! dequeue)
+  (cond ((empty-dequeue? dequeue)
+         (error "DELETE! called with an empty queue" dequeue))
         (else
-         (set-front-ptr! queue (cdr (front-ptr queue)))
-         (print-queue queue))))
+         (set-cdr! (cdr (car (rear-ptr dequeue))) '())
+         (set-rear-ptr! dequeue (cdr (car (rear-ptr dequeue))))
+         (print-dequeue dequeue))))
 
-(define q1 (make-queue))
-(display (insert-queue! q1 'a))
-;((a) a)
-(display (insert-queue! q1 'b))
-;((a b) b)
-(display (delete-queue! q1))  
-;((b) b)
-(display (delete-queue! q1))  
-;(() b)
+(define q1 (make-dequeue))
+(front-insert-dequeue! q1 'a)
 
-; The reason why the (cdr queue) contains the tail is because that is supposed to contain the pointer to the last element in the list.
+(rear-insert-dequeue! q1 'b)
+(front-insert-dequeue! q1 'c)
 
-;Now, since print-queue just returns the (car queue) it is displayed correctly. 
+(rear-delete-dequeue! q1)
+
+(front-delete-dequeue! q1)
+
+
+

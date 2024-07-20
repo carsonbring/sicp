@@ -1,0 +1,25 @@
+;;2024-07-04
+;;Lookup implementation for tree
+#lang sicp
+
+
+(define (entry tree) (car tree))
+(define (left-branch tree) (cadr tree))
+(define (right-branch tree) (caddr tree))
+(define (make-tree entry left right)
+  (list entry left right))
+
+
+(define (lookup given-key tree)
+  (cond ((null? tree) false)
+	((= given-key (car (entry tree))) (cadr (entry tree)))
+	(else (or (lookup given-key (left-branch tree)) (lookup given-key (right-branch tree))))))
+
+(display (lookup 5 (make-tree (cons 5 2)
+			      (make-tree (cons 4 1)
+					 (make-tree (cons 2 10)
+						    (make-tree (cons 1 22) '() '())
+						    (make-tree (cons 3 11) '() '()))
+					 '())
+			      (make-tree (cons 6 19) '() '() ))))
+

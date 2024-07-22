@@ -49,22 +49,15 @@
   (add-action! a1 or-action-procedure)
   (add-action! a2 or-action-procedure)
   'ok)
-;;Still working onthis one
-(define (ripple-carry-adder a-list b-list s-list carry)
-  (let ((new-a (car a-list)) (new-b (car a-list)) (new-s (make-wire)) (carry-b (make-wire)) (new-carry (make-wire)) (not-a (make-wire)) (not-b (make-wire)) (d (make-wire)) (e (make-wire)))
-    (if (null? a-list) s-list)
-        
-    (if (= (get-signal carry) 1) (inverter new-b carry-b) (set-signal! carry-b (get-signal new-b)))
-    (and-gate new-a carry-b new-carry)
-    (inverter new-a not-a)
-    (inverter carry-b not-b)
-    (and-gate new-a not-b d)
-    (and-gate carry-b not-a e)
-    (or-gate d e new-s)
-    (ripple-carry-adder (cdr a-list) (cdr b-list) (cons new-s s-list) new-carry)
-    
-    
-    
-    
-    )
-  )
+
+ (define (ripple-carry-adder a-list b-list s-list c) 
+   (let ((c-list (map (lambda (x) (make-wire)) (cdr a-list))) 
+         (c-0 (make-wire))) 
+     (map full-adder 
+          a-list 
+          b-list 
+          (append c-list (list c-0)) 
+          s-list 
+          (cons c c-list)) 
+     'ok)) 
+  

@@ -1,0 +1,20 @@
+;2024-08-19
+#lang sicp
+
+;; Exercise 4.64.  Louis Reasoner mistakenly deletes the outranked-by rule (section 4.4.1) from the data base.
+;; When he realizes this, he quickly reinstalls it. Unfortunately, he makes a slight change in the rule, and types it in as
+(rule (outranked-by ?staff-person ?boss)
+      (or (supervisor ?staff-person ?boss)
+          (and (outranked-by ?middle-manager ?boss)
+               (supervisor ?staff-person ?middle-manager))))
+;; Just after Louis types this information into the system, DeWitt Aull comes by to find out who outranks Ben
+;; Bitdiddle. He issues the query
+(outranked-by (Bitdiddle Ben) ?who)
+;; After answering, the system goes into an infinite loop. Explain why.
+;; Since the recursive case is put before the supervisor case, it tries to unify the (outranked-by ?middle-manger ?boss) before filtering based off of the other condition. This makes it so the supervisor filter is never called in the second half of the and statement
+;;Original
+
+(rule (outranked-by ?staff-person ?boss)
+      (or (supervisor ?staff-person ?boss)
+          (and (supervisor ?staff-person ?middle-manager)
+               (outranked-by ?middle-manager ?boss))))

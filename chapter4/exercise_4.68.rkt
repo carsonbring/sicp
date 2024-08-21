@@ -10,5 +10,9 @@
 (rule (append-to-form (?u . ?v) ?y (?u . ?z))
       (append-to-form ?v ?y ?z))
 
-(rule (reverse x? y?)
-      (append-to-form ))
+(rule (reverse () ()))
+(rule (reverse (?u . ?v) ?z)
+      (and (append-to-form ?x (?u) ?z)
+           (reverse ?v ?x)))
+
+; reverse the append to form and reverse statements to get the answer to the other reverse proposed in the problem

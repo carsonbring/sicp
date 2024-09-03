@@ -33,7 +33,7 @@
      (assign continue (label afterfib-n-2))    
      (save val)                         ; save Fib(n - 1)    
      (goto (label fib-loop))    
-   afterfib-n-2                         ; upon return, val contains Fib(n - 2)    
+   afterfib-n-2p                         ; upon return, val contains Fib(n - 2)    
    (restore n) ; CHANGED
 
      (restore continue)    
